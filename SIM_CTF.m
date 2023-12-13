@@ -119,8 +119,21 @@ P_p(:,:,i)=IM(3,1).*delI_FT1 +  IM(3,2).*delI_FT2 + IM(3,3).*delI_FT3;
 
    
 end
+%% 
 
 P_c=P_c/numel(theta_ar);
+
+figure
+imagesc(x*10^3,y*10^3, real(ifft2(ifftshift(P_c)))  );
+xlabel("x(mm)");
+ylabel("y(mm)");
+title("Diffraction limited phase image")
+colormap(gray)
+colorbar
+
+%% 
+
+
 
 D=(4.*sin(pi*lambda*z.*(U.^2+V.^2))).*OTF;
 D(isnan(D))=1;
