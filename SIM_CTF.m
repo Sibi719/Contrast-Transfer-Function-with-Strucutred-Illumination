@@ -123,13 +123,13 @@ end
 
 P_c=P_c/numel(theta_ar);
 
-figure
-imagesc(x*10^3,y*10^3, real(ifft2(ifftshift(P_c)))  );
-xlabel("x(mm)");
-ylabel("y(mm)");
-title("Diffraction limited phase image")
-colormap(gray)
-colorbar
+% figure
+% imagesc(x*10^3,y*10^3, real(ifft2(ifftshift(P_c)))  );
+% xlabel("x(mm)");
+% ylabel("y(mm)");
+% title("Diffraction limited phase image")
+% colormap(gray)
+% colorbar
 
 %% 
 
@@ -161,6 +161,13 @@ Sigamp = Objamp.*D;
 
 [P_c,Noise_P_c]=Weiner_filter_center(P_c,Al,al,D,K,W,OTF);
 P_c_s=real(ifft2(ifftshift(P_c)));
+figure
+imagesc(x*10^3,y*10^3, P_c_s );
+xlabel("x(mm)");
+ylabel("y(mm)");
+title("Diffraction limited phase image")
+colormap(gray)
+colorbar
 
 
 OBJamp1=Al.*(K).^(-al);
