@@ -9,7 +9,7 @@ no=N/2;
 Mag=20;
 dpix=(4.4*10^-6)/Mag;
 NoiseLevel=5;
-z=10*10^-6;
+z=2*10^-6;
 
 Kcut=1;
 Kotf=NA/lambda;
@@ -44,7 +44,7 @@ G=G./max(max(G));
 % grid on
 % box on
 
-OTF=H;
+OTF=G;
 
 Imagee=double(imread("gold.png"));
 Imagee = padarray(Imagee,[npad npad],0,"both");
@@ -58,7 +58,7 @@ figure
 imagesc(x*10^3,y*10^3,(P));
 title("Ground truth")
 colormap(gray)
-colorbar
+
 
 prop_kernel  = exp(-1j*pi*lambda*z.*(U.^2+V.^2));
 
@@ -159,16 +159,30 @@ Sigamp = Objamp.*D;
 % box on
 %% 
 
-[P_c,Noise_P_c]=Weiner_filter_center(P_c,Al,al,D,K,W,OTF);
-P_c_s=real(ifft2(ifftshift(P_c)));
+[P_cc,Noise_P_c]=Weiner_filter_center(P_c,Al,al,(4.*sin(pi*lambda*z.*(U.^2+V.^2))),K,W,OTF);
+P_c_s=real(ifft2(ifftshift(P_cc)));
 figure
 imagesc(x*10^3,y*10^3, P_c_s );
 xlabel("x(mm)");
 ylabel("y(mm)");
 title("Diffraction limited phase image")
 colormap(gray)
-colorbar
 
+FFF=P_c;
+p = 10;
+minL = min(min( abs(FFF).^(1/p) ));
+maxL = max(max( abs(FFF).^(1/p) ));
+figure;
+imagesc(u*10^-3,v*10^-3,abs(FFF).^(1/p),[minL maxL])
+xlabel("u(cycles/mm)");
+ylabel("v(cycles/mm)");
+title(" Diffraction limited frequency spectrum")
+colormap(gray);
+
+
+
+[P_c,Noise_P_c]=Weiner_filter_center(P_c,Al,al,D,K,W,OTF);
+P_c_s=real(ifft2(ifftshift(P_c)));
 
 OBJamp1=Al.*(K).^(-al);
 Signamp1=OBJamp1.*OTF;
@@ -241,7 +255,7 @@ xlabel("u(cycles/mm)");
 ylabel("v(cycles/mm)");
 title(" Merged frequency spectrum")
 colormap(gray);
-colorbar
+
 
 SIMimage=real( ifft2(ifftshift(Fmerged)));
 
@@ -251,7 +265,7 @@ xlabel("x(mm)");
 ylabel("y(mm)");
 title("High resolution phase using Strucutred illumination")
 colormap(gray)
-colorbar
+
 
 
 %%Uniform TIE
